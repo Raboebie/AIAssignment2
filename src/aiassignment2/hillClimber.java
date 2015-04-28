@@ -55,7 +55,7 @@ public class hillClimber {
                 trader.tradeString = getNeighbour(oldString);
                 runTrade(trader);
 
-                if (limit == 5000) {
+                if (limit == 200) { //Ensure this value relates to neighnourhood function limitation
                     flag = false;
                 }
             }

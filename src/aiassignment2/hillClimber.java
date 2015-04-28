@@ -3,7 +3,6 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package aiassignment2;
 
 import java.awt.Color;
@@ -15,58 +14,56 @@ import java.util.Random;
  * @author Dihan
  */
 public class hillClimber {
+
     private LinkedList<RenkoBlock> renkoChart = new LinkedList<RenkoBlock>();
     private Trader bestTrader = null;
-    private double bestFitness = 0;
-    public hillClimber(){}
-    
-    public hillClimber(LinkedList<RenkoBlock> _renkoList)
-    {
+
+    //  private double bestFitness = 0;
+
+    public hillClimber() {
+    }
+
+    public hillClimber(LinkedList<RenkoBlock> _renkoList) {
         renkoChart = _renkoList;
     }
-    
-    public void run()
-    {
-        boolean flag =  true;
-        
+
+    public void run() {
+        boolean flag = true;
+
         Trader trader = new Trader();
         trader.tradeString = generateInitialString();
         bestTrader = trader;
         runTrade(trader);
-        double initialFitness = trader.getFitness(renkoChart.get(renkoChart.size()-1).getStockInfo()._closingPrice);
-        bestFitness = initialFitness;
+        double initialFitness = trader.getFitness(renkoChart.get(renkoChart.size() - 1).getStockInfo()._closingPrice);
         int limit = 0;
-        
-        while(flag)
-        {
+
+        while (flag) {
             Trader newTrader = new Trader();
             newTrader.tradeString = getNeighbour(trader.tradeString);
             runTrade(newTrader);
-            if(newTrader.getFitness(renkoChart.get(renkoChart.size() - 1).getStockInfo()._closingPrice) > bestTrader.getFitness(renkoChart.get(renkoChart.size()-1).getStockInfo()._closingPrice))
-            {
+            if (newTrader.getFitness(renkoChart.get(renkoChart.size() - 1).getStockInfo()._closingPrice) > bestTrader.getFitness(renkoChart.get(renkoChart.size() - 1).getStockInfo()._closingPrice)) {
                 //New solution found
                 bestTrader = new Trader();
                 bestTrader.tradeString = newTrader.tradeString;
                 runTrade(bestTrader);
                 System.out.println("New best trader found " + bestTrader.tradeString + " with fitness of " + bestTrader.getFitness(renkoChart.get(renkoChart.size() - 1).getStockInfo()._closingPrice) / 60);
                 limit = 0;
-            }
-            else
-            {
+            } else {
                 limit++;
                 String oldString = trader.tradeString;
                 trader = new Trader();
                 trader.tradeString = getNeighbour(oldString);
                 runTrade(trader);
-                
-                if(limit == 10000)
+
+                if (limit == 5000) {
                     flag = false;
+                }
             }
         }
-        
-System.out.println("The best trader was: " + bestTrader.tradeString + " with a fitness of " + bestTrader.getFitness(renkoChart.get(renkoChart.size()- 1).getStockInfo()._closingPrice) / 60);
+
+        System.out.println("The best trader was: " + bestTrader.tradeString + " with a fitness of " + bestTrader.getFitness(renkoChart.get(renkoChart.size() - 1).getStockInfo()._closingPrice) / 60);
     }
-    
+
     private String generateInitialString() {
         char[] chars = "BSH".toCharArray();
         StringBuilder sb = new StringBuilder();
@@ -76,37 +73,36 @@ System.out.println("The best trader was: " + bestTrader.tradeString + " with a f
             sb.append(c);
         }
         String output = sb.toString();
-        
+
         return output;
     }
-    
-    private String getNeighbour(String traderString)
-    {
-        
+
+    private String getNeighbour(String traderString) {
+
         LinkedList<Character> temp = new LinkedList<>();
-        for(int k = 0 ; k < traderString.length() ; k++)
+        for (int k = 0; k < traderString.length(); k++) {
             temp.add(traderString.charAt(k));
-        
+        }
+
         Random rand = new Random();
-        int randomNumber = rand.nextInt((31 - 1) + 1)+ 1;
-        
-        
-        
+        int randomNumber = rand.nextInt((31 - 1) + 1) + 1;
+
         int pos1 = randomNumber;
         int pos2 = traderString.length() - randomNumber;
-        
+
         //Switch values !!
         Character stored = new Character(temp.get(pos1));
         temp.set(pos1, temp.get(pos2));
         temp.set(pos2, stored);
-        
+
         //Convert back to string
         String newtraderString = "";
-        for(int j = 0 ; j < traderString.length() ; j++)
+        for (int j = 0; j < traderString.length(); j++) {
             newtraderString += temp.get(j);
+        }
         return newtraderString;
     }
-    
+
     private void runTrade(Trader trader) {
         String temp = "";
         for (int k = 5; k < renkoChart.size(); k++) { //Start trading after 5 days have passed
@@ -140,6 +136,5 @@ System.out.println("The best trader was: " + bestTrader.tradeString + " with a f
             temp = "";
         }
     }
-    
-    
+
 }

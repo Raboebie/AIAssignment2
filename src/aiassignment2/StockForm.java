@@ -3,14 +3,15 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package aiassignment2;
+
 import java.awt.List;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.LinkedList;
 import javax.swing.JFileChooser;
+
 /**
  *
  * @author Dihan
@@ -24,7 +25,7 @@ public class StockForm extends javax.swing.JFrame {
     private LinkedList<StockInfo> stockList = new LinkedList<StockInfo>();
     private int closingPriceRange;
     private LinkedList<RenkoBlock> renkoChart = new LinkedList<RenkoBlock>();
-    
+
     public StockForm() {
         initComponents();
     }
@@ -91,88 +92,75 @@ public class StockForm extends javax.swing.JFrame {
 
     private void btnBrowseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBrowseActionPerformed
         // TODO add your handling code here:
-        
+
         final JFileChooser fileChooser = new JFileChooser();
-        
+
         fileChooser.showOpenDialog(this);
 
         edtFile.setText(fileChooser.getName(fileChooser.getSelectedFile()));
         choseFile = edtFile.getText();
-       
-        
-        try{
-        
+
+        try {
+
             FileReader fr = new FileReader(choseFile);
             BufferedReader br = new BufferedReader(fr);
             String line;
             int firstLoop = 0;
             Integer maxClosingPrice = null, minClosingPrice = null;
-            while((line = br.readLine()) != null)
-            {   
+            while ((line = br.readLine()) != null) {
                 String date;
                 int highPrice;
                 int lowPrice;
                 int closingPrice;
-                
+
                 String[] split = line.split("\\s+");
-                
-                
-                
-                if(split.length == 5)
-                {
+
+                if (split.length == 5) {
                     StockInfo stock = new StockInfo(split[0], Integer.parseInt(split[1]), Integer.parseInt(split[2]), Integer.parseInt(split[3]));
                     stockList.add(stock);
-                    
-                    if(firstLoop == 0)
-                    {
+
+                    if (firstLoop == 0) {
                         maxClosingPrice = Integer.parseInt(split[1]);
                         minClosingPrice = Integer.parseInt(split[1]);
                         firstLoop++;
                     }
-                    
-                    if(Integer.parseInt(split[1]) >= maxClosingPrice)
+
+                    if (Integer.parseInt(split[1]) >= maxClosingPrice) {
                         maxClosingPrice = Integer.parseInt(split[1]);
-                    else if(Integer.parseInt(split[1]) <= minClosingPrice)
+                    } else if (Integer.parseInt(split[1]) <= minClosingPrice) {
                         minClosingPrice = Integer.parseInt(split[1]);
+                    }
                 }
             }
-            
-            closingPriceRange = (int) ((maxClosingPrice -minClosingPrice) * 0.01);
+
+            closingPriceRange = (int) ((maxClosingPrice - minClosingPrice) * 0.01);
             closingPriceRange = Math.round(closingPriceRange);
-            
-        }
-        catch(IOException e)
-        {
+
+        } catch (IOException e) {
             System.err.println(e.toString());
         }
-        
+
         //Build renko chart info
-        
         int count = 0;
         int previousClosingPrice = stockList.get(count)._closingPrice;
-        for(StockInfo stock : stockList)
-        {
-            
+        for (StockInfo stock : stockList) {
+
             int test = stock._closingPrice - previousClosingPrice;
-            
-            if(test < 0)
-            {
-                if(test <= -closingPriceRange)
-                {
+
+            if (test < 0) {
+                if (test <= -closingPriceRange) {
                     RenkoBlock block = new RenkoBlock();
                     block.setColor("white");
                     block.setStockInfo(stock);
                     block.setDate(stock._date);
                     block.setPrice(stock._closingPrice);
                     renkoChart.add(block);
-                    previousClosingPrice  = previousClosingPrice - closingPriceRange;
+                    previousClosingPrice = previousClosingPrice - closingPriceRange;
                 }
-                    
+
             }
-             if(test > 0)
-            {
-                if(test >= closingPriceRange)
-                {
+            if (test > 0) {
+                if (test >= closingPriceRange) {
                     RenkoBlock block = new RenkoBlock();
                     block.setColor("black");
                     block.setStockInfo(stock);
@@ -180,20 +168,18 @@ public class StockForm extends javax.swing.JFrame {
                     block.setPrice(stock._closingPrice);
                     renkoChart.add(block);
 
-                    previousClosingPrice  = previousClosingPrice + closingPriceRange;
+                    previousClosingPrice = previousClosingPrice + closingPriceRange;
                 }
-                    
-            }
-            else {
+
+            } else {
                 //System.out.println("No renko block added");
             }
 
         }
-        
-        System.out.println("Renko Chart size " +renkoChart.size());
-        
-        
-        
+
+        System.out.println("Renko Chart size " + renkoChart.size());
+
+
     }//GEN-LAST:event_btnBrowseActionPerformed
 
     private void btnHillClimbRunActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnHillClimbRunActionPerformed

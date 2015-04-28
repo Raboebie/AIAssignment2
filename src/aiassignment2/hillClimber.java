@@ -114,9 +114,9 @@ public class hillClimber {
             for (RenkoBlock block : lastFive) {
                 String color = block.getColor();
                 if (color.equals("black")) {
-                    temp += "0";
-                } else if (color.equals("white")) {
                     temp += "1";
+                } else if (color.equals("white")) {
+                    temp += "0";
                 }
             }
             Chromosome chromosome = new Chromosome(temp, trader.tradeString);

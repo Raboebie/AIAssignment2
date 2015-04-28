@@ -59,7 +59,7 @@ public class hillClimber {
                 trader.tradeString = getNeighbour(oldString);
                 runTrade(trader);
                 
-                if(limit == 10000)
+                if(limit == 5000)
                     flag = false;
             }
         }
